@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+
+using namespace std;
+
+// задача 1
+vector<int> sortVector(vector<int> v) {
+    sort(v.begin(), v.end());
+    return v;
+}
+
+vector<int> reverseVector(vector<int> v) {
+    reverse(v.begin(), v.end());
+    return v;
+}
+
+// задача 2
+
+int sum(vector<int> arr, int n) {
+
+    return accumulate(arr.begin(), arr.end(), 0);
+}
+
+// задача 3
+int findFrequency(vector<int> arr, int x) {
+    return count(arr.begin(), arr.end(), x);
+}
+
+
+int main() {
+    vector<int> arr = {5, 2, 8, 2, 1, 5, 3};
+    
+    // задача 1
+    vector<int> sorted = sortVector(arr);
+    cout << "Sorted: ";
+    for (int x : sorted) cout << x << " "; 
+    cout << endl;
+    vector<int> reversed = reverseVector(arr);
+    cout << "Reversed: ";
+    for (int x : reversed) cout << x << " "; 
+    cout << endl;
+    
+    // задача 2
+    cout << "Sum: " << sum(arr, arr.size()) << endl;  
+    
+    // задача 3
+    cout << "Frequency of 2: " << findFrequency(arr, 2) << endl; 
+    
+}
