@@ -1,0 +1,122 @@
+// задача 2
+#include <iostream>
+#include <chrono>
+#include <Eigen/Dense>
+#include <Eigen/LU>
+#include <Eigen/QR>
+
+using namespace std;
+using namespace Eigen;
+
+int main() {
+    
+    const int n = 500;         
+    const int m = 10;          
+    
+    MatrixXd A = MatrixXd::Random(n, n);
+    MatrixXd A_sym = A * A.transpose();
+    MatrixXd B = MatrixXd::Random(n, m);
+    
+    auto start = chrono::high_resolution_clock::now();
+    
+    MatrixXd X = A_sym.lu().solve(B);
+    
+    auto end = chrono::high_resolution_clock::now();
+    
+    chrono::duration<double> duration = end - start;
+    chrono::milliseconds ms = chrono::duration_cast<chrono::milliseconds>(duration);
+    
+    cout << "время выполнения: " << duration.count() << " s" << endl;
+    cout << "время выполнения: " << ms.count() << " ms" << endl;
+    cout << "объём памяти: " 
+         << (n * n * sizeof(double) + n * m * sizeof(double) * 2) / (1024.0 * 1024.0) 
+         << " MB" << endl << endl;
+    
+    cout << "первые 5 строк и 5 столбцов матрицы X" << endl;
+    for (int i = 0; i < min(5, n); i++) {
+        for (int j = 0; j < min(5, m); j++) {
+            cout << X(i, j) << "\t";
+        }
+        cout << endl;
+    }
+    
+    cout << "проверка для одного столбца" << endl;
+    VectorXd b1 = B.col(0);           
+    VectorXd x1 = A_sym.lu().solve(b1); 
+    
+    return 0;
+}
+
+// задача 5
+#include <iostream>
+#include <chrono>
+#include <Eigen/Dense>
+
+using namespace std;
+using namespace Eigen;
+
+// ручное транспонирование
+MatrixXd manualTranspose(const MatrixXd& A) {
+    int rows = A.rows();    
+    int cols = A.cols();    
+    
+    MatrixXd result(cols, rows);
+    
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result(j, i) = A(i, j);
+        }
+    }
+    return result;
+}
+
+void printMatrix(const MatrixXd& M, const string& name) {
+    cout << name << " (" << M.rows() << "×" << M.cols() << "):" << endl;
+    for (int i = 0; i < M.rows(); i++) {
+        for (int j = 0; j < M.cols(); j++) {
+            cout << M(i, j) << "\t";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+int main() {
+
+    cout << "матрица 1000x800" << endl;
+    
+    const int rows = 1000;
+    const int cols = 800;
+    
+    MatrixXd bigMat = MatrixXd::Random(rows, cols);
+    
+    
+    cout << "транспонирование через Eigen" << endl;
+
+    auto start = chrono::high_resolution_clock::now();
+    
+    MatrixXd eigenTransposed = bigMat.transpose();
+    
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration_eigen = end - start;
+    chrono::milliseconds ms_eigen = chrono::duration_cast<chrono::milliseconds>(duration_eigen);
+    
+    cout << "время: " << duration_eigen.count() << " s (" 
+         << ms_eigen.count() << " ms)" << endl;
+    
+    cout << "транспонирование не Eigen" << endl;
+    
+    start = chrono::high_resolution_clock::now();
+    
+    MatrixXd manualTransposed = manualTranspose(bigMat);
+    
+    end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration_manual = end - start;
+    chrono::milliseconds ms_manual = chrono::duration_cast<chrono::milliseconds>(duration_manual);
+    
+    cout << "   Время: " << duration_manual.count() << " s (" 
+         << ms_manual.count() << " ms)" << endl;
+    
+    cout << сравнение << endl;
+    cout << "Eigen быстрее в " << (duration_manual / duration_eigen) << " раз" << endl;
+}
