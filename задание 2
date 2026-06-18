@@ -117,6 +117,6 @@ int main() {
     cout << "   Время: " << duration_manual.count() << " s (" 
          << ms_manual.count() << " ms)" << endl;
     
-    cout << сравнение << endl;
+    cout << "сравнение" << endl;
     cout << "Eigen быстрее в " << (duration_manual / duration_eigen) << " раз" << endl;
 }
