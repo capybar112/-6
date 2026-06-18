@@ -6,7 +6,7 @@ using namespace cv;
 
 int main() {
     // путь: "C:/Users/User/Pictures/photo.jpg"
-    string imagePath = "image.jpg";
+    string imagePath = "C:/Users/User/Pictures/photo.jpg";
     
     // Загружаем изображение
     Mat image = imread(imagePath);
